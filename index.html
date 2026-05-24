@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <title>Cuestionario Clase B</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
         .pregunta { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
         button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
         #menu { margin-bottom: 20px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
-        .feedback { font-size: 1.5em; margin-left: 10px; }
+        .feedback { font-size: 1.2em; font-weight: bold; }
+        img { max-width: 100%; height: auto; display: block; margin: 10px auto; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -34,6 +35,73 @@
                 pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. ¿Cuál es la falla más probable?",
                 opciones: ["Un bajo nivel del líquido de frenos.", "Su freno de mano está todavía puesto.", "Frenos mal ajustados.", "Neumáticos con presión de aire inadecuada."],
                 correcta: 2
+            },
+            {
+                pregunta: "Mientras conduce usted siente un fuerte olor a gasolina. ¿Qué debería hacer usted?",
+                opciones: ["No preocuparse, ya que sólo son los gases de escape.", "Continuar a una velocidad reducida.", "Continuar porque sabe que se detendrá algunos kilómetros más allá.", "Detenerse e investigar el problema."],
+                correcta: 3
+            },
+            {
+                pregunta: "¿Cómo puede prevenir usted el riesgo de incendio de su vehículo?",
+                opciones: ["Manteniendo los niveles de agua sobre el máximo.", "Evitando conducir con el estanque lleno de combustible.", "Usando gasolina sin plomo.", "Revisando su vehículo ante cualquier olor a gasolina extraño."],
+                correcta: 3
+            },
+            {
+                pregunta: "¿Por qué es importante usar zapatos apropiados cuando conduce?",
+                opciones: ["Para tener un adecuado control de los pedales.", "Para evitar el desgaste acelerado de las gomas de los pedales.", "Para poder efectuar los cambios de marcha más rápidamente.", "Para poder caminar sin problemas en el caso que necesite solicitar ayuda."],
+                correcta: 0
+            },
+            {
+                pregunta: "En un automóvil, ¿cuál de los siguientes elementos reduce el riesgo de lesiones de cuello en una colisión?<br><img src='https://raw.githubusercontent.com/xelitoxd7/cuestionario-clase-b/refs/heads/main/pregunta7.png'>",
+                opciones: ["Un asiento dotado de air-bag (bolsa de aire).", "Los frenos ABS.", "Una columna de dirección colapsable.", "Un asiento con apoya-cabeza ajustado en forma apropiada."],
+                correcta: 3
+            }
+        ];
+
+        function limpiarMenu() { document.getElementById('menu').style.display = 'none'; }
+
+        function iniciarCuestionario() {
+            limpiarMenu();
+            mostrarPreguntas(bancoDePreguntas);
+        }
+
+        function preguntasAlAzar() {
+            limpiarMenu();
+            const seleccion = [...bancoDePreguntas].sort(() => 0.5 - Math.random()).slice(0, 10);
+            mostrarPreguntas(seleccion);
+        }
+
+        function mostrarPreguntas(lista) {
+            let html = "";
+            lista.forEach((p, index) => {
+                html += `<div class="pregunta" id="pregunta-${index}">
+                    <p><strong>${index + 1}. ${p.pregunta}</strong></p>`;
+                p.opciones.forEach((op, i) => {
+                    html += `<input type="radio" name="p${index}" value="${i}"> ${op}<br>`;
+                });
+                html += `<br><span class="feedback" id="feedback-${index}"></span>
+                        </div>`;
+            });
+            html += `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
+            document.getElementById('contenedor-preguntas').innerHTML = html;
+        }
+
+        function verificar() {
+            bancoDePreguntas.forEach((p, index) => {
+                const seleccionada = document.querySelector(`input[name="p${index}"]:checked`);
+                const feedback = document.getElementById(`feedback-${index}`);
+                if (seleccionada) {
+                    feedback.innerHTML = (parseInt(seleccionada.value) === p.correcta) ? " ✅ Correcto" : " ❌ Incorrecto";
+                } else {
+                    feedback.innerHTML = " (No contestada) ❌";
+                }
+            });
+            document.getElementById('btn-calificar').style.display = 'none';
+            document.getElementById('contenedor-botones-finales').innerHTML = `<br><button onclick="location.reload()">Reiniciar Cuestionario</button>`;
+        }
+    </script>
+</body>
+</html>
             },
             {
             pregunta: "Mientras conduce usted siente un fuerte olor a gasolina. ¿Qué debería hacer usted?",
