@@ -68,21 +68,21 @@
 
         let preguntasActuales = [];
 
-        function iniciarCuestionario() {
-            // Mostrar selector y ocultar menú
+                function iniciarCuestionario() {
             document.getElementById('selector-container').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
             
             let cantidad = document.getElementById('cantidad').value;
-            preguntasActuales = [...bancoDePreguntas];
+            let lista = [...bancoDePreguntas];
 
+            // SI NO SON TODAS, SELECCIONA LAS PRIMERAS (MANTENIENDO EL ORDEN)
             if (cantidad !== 'all') {
-                preguntasActuales = preguntasActuales.sort(() => 0.5 - Math.random()).slice(0, parseInt(cantidad));
+                lista = lista.slice(0, parseInt(cantidad));
             }
 
             let html = "";
-            preguntasActuales.forEach((p, index) => {
+            lista.forEach((p, index) => {
                 let aviso = p.tipo === "una" ? "Marque una opción" : "Marque las opciones correctas";
                 html += `<div class="pregunta" id="pregunta-${index}">
                     <p><strong>${index + 1}. ${p.pregunta}</strong> <br><span class="aviso">(${aviso})</span></p>`;
@@ -95,6 +95,7 @@
             html += `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
+
 
         function verificar() {
             preguntasActuales.forEach((p, index) => {
