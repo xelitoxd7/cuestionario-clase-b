@@ -7,13 +7,10 @@
         body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
-        
-        /* Oculto por defecto */
         #selector-container { display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
         button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
         #menu { margin-top: 50px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
-        .feedback { font-size: 1.2em; font-weight: bold; }
+        .feedback { font-size: 1.2em; font-weight: bold; margin-top: 10px; display: block; }
         img { max-width: 100px; height: auto; display: block; margin: 10px auto; border-radius: 5px; }
     </style>
 </head>
@@ -68,34 +65,32 @@
 
         let preguntasActuales = [];
 
-                function iniciarCuestionario() {
+        function iniciarCuestionario() {
             document.getElementById('selector-container').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
             
             let cantidad = document.getElementById('cantidad').value;
-            let lista = [...bancoDePreguntas];
+            preguntasActuales = [...bancoDePreguntas];
 
-            // SI NO SON TODAS, SELECCIONA LAS PRIMERAS (MANTENIENDO EL ORDEN)
             if (cantidad !== 'all') {
-                lista = lista.slice(0, parseInt(cantidad));
+                preguntasActuales = preguntasActuales.slice(0, parseInt(cantidad));
             }
 
             let html = "";
-            lista.forEach((p, index) => {
+            preguntasActuales.forEach((p, index) => {
                 let aviso = p.tipo === "una" ? "Marque una opción" : "Marque las opciones correctas";
                 html += `<div class="pregunta" id="pregunta-${index}">
                     <p><strong>${index + 1}. ${p.pregunta}</strong> <br><span class="aviso">(${aviso})</span></p>`;
                 p.opciones.forEach((op, i) => {
                     html += `<input type="checkbox" name="p${index}" value="${i}"> ${op}<br>`;
                 });
-                html += `<br><span class="feedback" id="feedback-${index}"></span></div>`;
+                html += `<span class="feedback" id="feedback-${index}"></span></div>`;
             });
             
-            html += `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
+            html += `<button type="button" id="btn-calificar" onclick="verificar()">Calificar</button>`;
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
-
 
         function verificar() {
             preguntasActuales.forEach((p, index) => {
