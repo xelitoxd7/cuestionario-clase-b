@@ -101,7 +101,8 @@
             });
             
             document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="location.reload()">Volver al menú</button>`;
+            // AQUÍ ESTÁ EL CAMBIO: Llama a iniciarCuestionario en lugar de recargar la página
+            document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="iniciarCuestionario()">Reiniciar</button>`;
         }
     </script>
 </body>
