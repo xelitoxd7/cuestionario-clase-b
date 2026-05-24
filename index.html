@@ -7,7 +7,7 @@
         body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
-        button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+        button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
         #menu { margin-bottom: 20px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
         .feedback { font-size: 1.2em; font-weight: bold; }
         img { max-width: 100px; height: auto; display: block; margin: 10px auto; border-radius: 5px; }
@@ -25,34 +25,35 @@
 
     <script>
         const bancoDePreguntas = [
-            { pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. Usted debería:", opciones: ["Cambiar los neumáticos.", "Bombear el pedal.", "Usar freno de mano.", "Consultar con su mecánico."], correcta: [3], tipo: "una" },
-            { pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. ¿Falla más probable?", opciones: ["Nivel líquido.", "Freno mano puesto.", "Frenos mal ajustados.", "Presión neumáticos."], correcta: [2], tipo: "una" },
-            { pregunta: "Mientras conduce siente un fuerte olor a gasolina. ¿Qué debe hacer?", opciones: ["No preocuparse.", "Velocidad reducida.", "Continuar.", "Detenerse e investigar."], correcta: [3], tipo: "una" },
-            { pregunta: "¿Cómo puede prevenir usted el riesgo de incendio de su vehículo?", opciones: ["Niveles agua.", "Estanque lleno.", "Gasolina sin plomo.", "Revisar olor a gasolina."], correcta: [3], tipo: "una" },
-            { pregunta: "¿Por qué es importante usar zapatos apropiados cuando conduce?", opciones: ["Control de pedales.", "Desgaste gomas.", "Cambios rápido.", "Caminar mejor."], correcta: [0], tipo: "una" },
-            { pregunta: "En un automóvil, ¿cuál de los siguientes elementos reduce el riesgo de lesiones de cuello en una colisión?", opciones: ["Air-bag.", "Frenos ABS.", "Columna dirección.", "Apoya-cabeza."], correcta: [3], tipo: "una" },
-            { pregunta: '¿Qué significa esta luz de advertencia?<br><img src="https://raw.githubusercontent.com/xelitoxd7/cuestionario-clase-b/refs/heads/main/pregunta7.jpg">', opciones: ["Neblineras.", "Advertencia peligro.", "Luces altas.", "Freno mano."], correcta: [1], tipo: "una" },
-            { pregunta: "Es esencial que la presión de los neumáticos sea chequeada regularmente. ¿Cuándo?", opciones: ["Viaje largo.", "Alta velocidad.", "Neumáticos fríos.", "Neumáticos calientes."], correcta: [2], tipo: "una" },
-            { pregunta: "La presión de los neumáticos debe revisarse:", opciones: ["Fríos.", "Calientes.", "Cualquier momento."], correcta: [0], tipo: "una" },
-            { pregunta: "¿Cuál de estos líquidos, en el caso de estar bajo, podría causar accidente?", opciones: ["Líquido freno.", "Anticongelante.", "Agua batería.", "Refrigerante."], correcta: [0], tipo: "una" },
-            { pregunta: "Frente a situación normal, ¿forma más segura de frenar?", opciones: ["Freno fuerte.", "Suave con embrague.", "Neutro.", "Progresivo."], correcta: [3], tipo: "una" },
-            { pregunta: "¿Cuándo usaría las luces intermitentes de advertencia?", opciones: ["Pana obstruyendo.", "Doble fila.", "Línea amarilla.", "Señalizadores malos."], correcta: [0], tipo: "una" },
-            { pregunta: "Las luces de advertencia de peligro deberían ser usadas:", opciones: ["Doble fila.", "Advertir peligro.", "Virar.", "Prisa."], correcta: [1], tipo: "una" },
-            { pregunta: "¿Cuándo usaría las luces de advertencia de peligro?", opciones: ["Pana lenta.", "Remolcado.", "Retrocediendo.", "Pana obstruyendo."], correcta: [3], tipo: "una" },
-            { pregunta: "Suspension rebota u oscila al cargar. ¿Qué significa?", opciones: ["Neumáticos gastados.", "Neumáticos poco inflados.", "Volante mal.", "Amortiguadores gastados."], correcta: [3], tipo: "una" },
-            { pregunta: "¿Por qué los neumáticos deben mantenerse a la presión indicada?", opciones: ["Altura.", "Desgastar motor.", "Evitar ronceo.", "Inclinación."], correcta: [2], tipo: "una" },
-            { pregunta: "¿A qué se debe un alto consumo de combustible?", opciones: ["Dirección.", "Aceleración curvas.", "Frenadas y aceleraciones.", "Marchas altas."], correcta: [2], tipo: "una" },
-            { pregunta: "Profundidad surcos no debería ser inferior a:", opciones: ["5.0 mm", "4.0 mm", "1.6 mm", "1.0 mm"], correcta: [2], tipo: "una" },
-            { pregunta: "Uno de sus neumáticos traseros se revienta. ¿Qué debe hacer?", opciones: ["Poner marcha atrás.", "Señal de detención/disminuir velocidad.", "Detenerse lentamente.", "Frenar a fondo."], correcta: [1, 2], tipo: "varias" },
-            { pregunta: "¿Qué debe hacer si se le revienta un neumático delantero?", opciones: ["Cambiarse pista.", "Frenar suave/seguir.", "Frenar firme.", "Sostener firme el volante."], correcta: [1, 3], tipo: "varias" },
-            { pregunta: "¿Qué es lo que nunca debería hacer en una bomba de bencina?", opciones: ["Circular.", "Fumar.", "Comer.", "Lavar."], correcta: [1], tipo: "una" },
-            { pregunta: "Desenganchar el motor del vehículo...", opciones: ["Mejor control.", "Maniobras.", "Más consumo.", "Reduce control."], correcta: [3], tipo: "una" },
-            { pregunta: "¿Por qué no es bueno desenganchar el motor al ir circulando?", opciones: ["Resbala.", "Motor se detiene.", "No hay frenado motor.", "Motor rápido."], correcta: [2], tipo: "una" },
-            { pregunta: "¿Por qué no debe desengancharse el motor al ir cuesta abajo?", opciones: ["Menor control frenado/dirección.", "Velocidad.", "Consumo.", "Daño neumáticos.", "Daño motor."], correcta: [0, 3], tipo: "varias" }
+            { pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. Usted debería:", opciones: ["Cambiar los neumáticos.", "Bombear el pedal.", "Usar freno de mano.", "Consultar con su mecánico."], c: [3], tipo: "una" },
+            { pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. ¿Falla más probable?", opciones: ["Nivel líquido.", "Freno mano puesto.", "Frenos mal ajustados.", "Presión neumáticos."], c: [2], tipo: "una" },
+            { pregunta: "Mientras conduce siente un fuerte olor a gasolina. ¿Qué debe hacer?", opciones: ["No preocuparse.", "Velocidad reducida.", "Continuar.", "Detenerse e investigar."], c: [3], tipo: "una" },
+            { pregunta: "¿Cómo puede prevenir usted el riesgo de incendio de su vehículo?", opciones: ["Niveles agua.", "Estanque lleno.", "Gasolina sin plomo.", "Revisar olor a gasolina."], c: [3], tipo: "una" },
+            { pregunta: "¿Por qué es importante usar zapatos apropiados cuando conduce?", opciones: ["Control de pedales.", "Desgaste gomas.", "Cambios rápido.", "Caminar mejor."], c: [0], tipo: "una" },
+            { pregunta: "En un automóvil, ¿cuál de los siguientes elementos reduce el riesgo de lesiones de cuello en una colisión?", opciones: ["Air-bag.", "Frenos ABS.", "Columna dirección.", "Apoya-cabeza."], c: [3], tipo: "una" },
+            { pregunta: '¿Qué significa esta luz de advertencia?<br><img src="https://raw.githubusercontent.com/xelitoxd7/cuestionario-clase-b/refs/heads/main/pregunta7.jpg">', opciones: ["Neblineras.", "Advertencia peligro.", "Luces altas.", "Freno mano."], c: [1], tipo: "una" },
+            { pregunta: "Es esencial que la presión de los neumáticos sea chequeada regularmente. ¿Cuándo?", opciones: ["Viaje largo.", "Alta velocidad.", "Neumáticos fríos.", "Neumáticos calientes."], c: [2], tipo: "una" },
+            { pregunta: "La presión de los neumáticos debe revisarse:", opciones: ["Fríos.", "Calientes.", "Cualquier momento."], c: [0], tipo: "una" },
+            { pregunta: "¿Cuál de estos líquidos, en el caso de estar bajo, podría causar accidente?", opciones: ["Líquido freno.", "Anticongelante.", "Agua batería.", "Refrigerante."], c: [0], tipo: "una" },
+            { pregunta: "Frente a situación normal, ¿forma más segura de frenar?", opciones: ["Freno fuerte.", "Suave con embrague.", "Neutro.", "Progresivo."], c: [3], tipo: "una" },
+            { pregunta: "¿Cuándo usaría las luces intermitentes de advertencia?", opciones: ["Pana obstruyendo.", "Doble fila.", "Línea amarilla.", "Señalizadores malos."], c: [0], tipo: "una" },
+            { pregunta: "Las luces de advertencia de peligro deberían ser usadas:", opciones: ["Doble fila.", "Advertir peligro.", "Virar.", "Prisa."], c: [1], tipo: "una" },
+            { pregunta: "¿Cuándo usaría las luces de advertencia de peligro?", opciones: ["Pana lenta.", "Remolcado.", "Retrocediendo.", "Pana obstruyendo."], c: [3], tipo: "una" },
+            { pregunta: "Suspension rebota u oscila al cargar. ¿Qué significa?", opciones: ["Neumáticos gastados.", "Neumáticos poco inflados.", "Volante mal.", "Amortiguadores gastados."], c: [3], tipo: "una" },
+            { pregunta: "¿Por qué los neumáticos deben mantenerse a la presión indicada?", opciones: ["Altura.", "Desgastar motor.", "Evitar ronceo.", "Inclinación."], c: [2], tipo: "una" },
+            { pregunta: "¿A qué se debe un alto consumo de combustible?", opciones: ["Dirección.", "Aceleración curvas.", "Frenadas y aceleraciones.", "Marchas altas."], c: [2], tipo: "una" },
+            { pregunta: "Profundidad surcos no debería ser inferior a:", opciones: ["5.0 mm", "4.0 mm", "1.6 mm", "1.0 mm"], c: [2], tipo: "una" },
+            { pregunta: "Uno de sus neumáticos traseros se revienta. ¿Qué debe hacer?", opciones: ["Poner marcha atrás.", "Señal de detención/disminuir velocidad.", "Detenerse lentamente.", "Frenar a fondo."], c: [1, 2], tipo: "varias" },
+            { pregunta: "¿Qué debe hacer si se le revienta un neumático delantero?", opciones: ["Cambiarse pista.", "Frenar suave/seguir.", "Frenar firme.", "Sostener firme el volante."], c: [1, 3], tipo: "varias" },
+            { pregunta: "¿Qué es lo que nunca debería hacer en una bomba de bencina?", opciones: ["Circular.", "Fumar.", "Comer.", "Lavar."], c: [1], tipo: "una" },
+            { pregunta: "Desenganchar el motor del vehículo...", opciones: ["Mejor control.", "Maniobras.", "Más consumo.", "Reduce control."], c: [3], tipo: "una" },
+            { pregunta: "¿Por qué no es bueno desenganchar el motor al ir circulando?", opciones: ["Resbala.", "Motor se detiene.", "No hay frenado motor.", "Motor rápido."], c: [2], tipo: "una" },
+            { pregunta: "¿Por qué no debe desengancharse el motor al ir cuesta abajo?", opciones: ["Menor control frenado/dirección.", "Velocidad.", "Consumo.", "Daño neumáticos.", "Daño motor."], c: [0, 3], tipo: "varias" }
         ];
 
         function iniciarCuestionario() {
             document.getElementById('menu').style.display = 'none';
+            document.getElementById('contenedor-botones-finales').innerHTML = '';
             let html = "";
             bancoDePreguntas.forEach((p, index) => {
                 let aviso = p.tipo === "una" ? "Marque una opción" : "Marque las opciones correctas";
@@ -63,7 +64,7 @@
                 });
                 html += `<br><span class="feedback" id="feedback-${index}"></span></div>`;
             });
-            html += `<button onclick="verificar()">Calificar</button>`;
+            html += `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
 
@@ -74,6 +75,8 @@
                 const correcta = p.c.every(c => marcadas.includes(c)) && marcadas.length === p.c.length;
                 feedback.innerHTML = correcta ? " ✅ Correcto" : " ❌ Incorrecto";
             });
+            document.getElementById('btn-calificar').style.display = 'none';
+            document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="iniciarCuestionario()">Volver a intentar</button>`;
         }
     </script>
 </body>
