@@ -36,7 +36,9 @@
         ];
 
         function limpiarMenu() { document.getElementById('menu').style.display = 'none'; }
+        
         function iniciarCuestionario() { limpiarMenu(); mostrarPreguntas(bancoDePreguntas); }
+        
         function preguntasAlAzar() { limpiarMenu(); const seleccion = [...bancoDePreguntas].sort(() => 0.5 - Math.random()).slice(0, 10); mostrarPreguntas(seleccion); }
 
         function mostrarPreguntas(lista) {
@@ -52,6 +54,7 @@
             });
             html += `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
             document.getElementById('contenedor-preguntas').innerHTML = html;
+            document.getElementById('contenedor-botones-finales').innerHTML = ''; // Limpiar botón reiniciar
         }
 
         function verificar() {
@@ -62,7 +65,8 @@
                 else { feedback.innerHTML = " (No contestada) ❌"; }
             });
             document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<br><button onclick="location.reload()">Reiniciar Cuestionario</button>`;
+            // Ahora este botón solo limpia los resultados visuales sin recargar la página
+            document.getElementById('contenedor-botones-finales').innerHTML = `<br><button onclick="iniciarCuestionario()">Volver a intentar</button>`;
         }
     </script>
 </body>
