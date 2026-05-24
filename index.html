@@ -7,23 +7,30 @@
         body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
+        
+        /* Oculto por defecto */
+        #selector-container { display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
         button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-        #menu { margin-bottom: 20px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
+        #menu { margin-top: 50px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
         .feedback { font-size: 1.2em; font-weight: bold; }
         img { max-width: 100px; height: auto; display: block; margin: 10px auto; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <h1>CUESTIONARIO CLASE B</h1>
-    <div id="menu">
-        <label for="cantidad">Preguntas por ronda:</label>
-        <select id="cantidad">
-            <option value="10">10 preguntas</option>
-            <option value="20">20 preguntas</option>
+    <div id="selector-container">
+        <label for="cantidad">Preguntas:</label>
+        <select id="cantidad" onchange="iniciarCuestionario()">
+            <option value="10">10</option>
+            <option value="20">20</option>
             <option value="all">Todas</option>
         </select>
-        <br>
+    </div>
+
+    <h1>CUESTIONARIO CLASE B</h1>
+    
+    <div id="menu">
         <button onclick="iniciarCuestionario()">Iniciar Cuestionario</button>
     </div>
 
@@ -59,20 +66,23 @@
         ];
 
 
+        let preguntasActuales = [];
+
         function iniciarCuestionario() {
+            // Mostrar selector y ocultar menú
+            document.getElementById('selector-container').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
             
             let cantidad = document.getElementById('cantidad').value;
-            let lista = [...bancoDePreguntas];
+            preguntasActuales = [...bancoDePreguntas];
 
-            // Si no son "todas", mezclamos y cortamos
             if (cantidad !== 'all') {
-                lista = lista.sort(() => 0.5 - Math.random()).slice(0, parseInt(cantidad));
+                preguntasActuales = preguntasActuales.sort(() => 0.5 - Math.random()).slice(0, parseInt(cantidad));
             }
 
             let html = "";
-            lista.forEach((p, index) => {
+            preguntasActuales.forEach((p, index) => {
                 let aviso = p.tipo === "una" ? "Marque una opción" : "Marque las opciones correctas";
                 html += `<div class="pregunta" id="pregunta-${index}">
                     <p><strong>${index + 1}. ${p.pregunta}</strong> <br><span class="aviso">(${aviso})</span></p>`;
@@ -87,19 +97,15 @@
         }
 
         function verificar() {
-            // Nota: Aquí estamos usando el banco original para comparar
-            // Para una versión más avanzada con preguntas al azar, 
-            // necesitaríamos pasar la lista seleccionada a esta función.
-            bancoDePreguntas.forEach((p, index) => {
+            preguntasActuales.forEach((p, index) => {
                 const marcadas = Array.from(document.querySelectorAll(`input[name="p${index}"]:checked`)).map(el => parseInt(el.value));
                 const feedback = document.getElementById(`feedback-${index}`);
-                if (feedback) {
-                    const correcta = p.c.every(c => marcadas.includes(c)) && marcadas.length === p.c.length;
-                    feedback.innerHTML = correcta ? " ✅ Correcto" : " ❌ Incorrecto";
-                }
+                const correcta = p.c.every(c => marcadas.includes(c)) && marcadas.length === p.c.length;
+                feedback.innerHTML = correcta ? " ✅ Correcto" : " ❌ Incorrecto";
             });
+            
             document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="location.reload()">Reiniciar Selección</button>`;
+            document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="location.reload()">Volver al menú</button>`;
         }
     </script>
 </body>
