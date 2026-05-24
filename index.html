@@ -25,37 +25,44 @@
     <div id="contenedor-botones-finales"></div>
 
     <script>
-        const bancoDePreguntas = [
+                const bancoDePreguntas = [
             {
                 pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. Usted debería:",
                 opciones: ["Cambiar los neumáticos de un lado hacia el otro y viceversa.", "Bombear el pedal al frenar.", "Usar su freno de mano.", "Consultar con su mecánico lo antes posible."],
-                correcta: 3
+                correcta: 3 // Respuesta d
             },
             {
                 pregunta: "Su vehículo se desvía hacia un lado cuando usted frena. ¿Cuál es la falla más probable?",
                 opciones: ["Un bajo nivel del líquido de frenos.", "Su freno de mano está todavía puesto.", "Frenos mal ajustados.", "Neumáticos con presión de aire inadecuada."],
-                correcta: 2
+                correcta: 2 // Respuesta c
             },
             {
                 pregunta: "Mientras conduce usted siente un fuerte olor a gasolina. ¿Qué debería hacer usted?",
                 opciones: ["No preocuparse, ya que sólo son los gases de escape.", "Continuar a una velocidad reducida.", "Continuar porque sabe que se detendrá algunos kilómetros más allá.", "Detenerse e investigar el problema."],
-                correcta: 3
+                correcta: 3 // Respuesta d
             },
             {
                 pregunta: "¿Cómo puede prevenir usted el riesgo de incendio de su vehículo?",
                 opciones: ["Manteniendo los niveles de agua sobre el máximo.", "Evitando conducir con el estanque lleno de combustible.", "Usando gasolina sin plomo.", "Revisando su vehículo ante cualquier olor a gasolina extraño."],
-                correcta: 3
+                correcta: 3 // Respuesta d
             },
             {
                 pregunta: "¿Por qué es importante usar zapatos apropiados cuando conduce?",
                 opciones: ["Para tener un adecuado control de los pedales.", "Para evitar el desgaste acelerado de las gomas de los pedales.", "Para poder efectuar los cambios de marcha más rápidamente.", "Para poder caminar sin problemas en el caso que necesite solicitar ayuda."],
-                correcta: 0
+                correcta: 0 // Respuesta a
             },
             {
-                pregunta: "En un automóvil, ¿cuál de los siguientes elementos reduce el riesgo de lesiones de cuello en una colisión?<br><img src='https://raw.githubusercontent.com/xelitoxd7/cuestionario-clase-b/refs/heads/main/pregunta7.jpg'>",
+                pregunta: "En un automóvil, ¿cuál de los siguientes elementos reduce el riesgo de lesiones de cuello en una colisión?",
                 opciones: ["Un asiento dotado de air-bag (bolsa de aire).", "Los frenos ABS.", "Una columna de dirección colapsable.", "Un asiento con apoya-cabeza ajustado en forma apropiada."],
-                correcta: 3
+                correcta: 3 // Respuesta d
+            },
+            {
+                pregunta: "¿Qué significa esta luz de advertencia en el panel de instrumentos?<br><img src='https://raw.githubusercontent.com/xelitoxd7/cuestionario-clase-b/refs/heads/main/pregunta7.png'>",
+                opciones: ["Luces neblineras.", "Intermitentes de advertencia de peligro.", "Luces altas.", "Freno de mano puesto."],
+                correcta: 1 // Respuesta b
             }
+        ];
+
         ];
 
         function limpiarMenu() { document.getElementById('menu').style.display = 'none'; }
