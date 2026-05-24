@@ -7,7 +7,22 @@
         body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
-        button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+        
+        /* Botón fijo en la parte superior */
+        #btn-calificar { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background-color: #4CAF50; 
+            color: white; 
+            border: none; 
+            padding: 15px 25px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
         #menu { margin-bottom: 20px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
         .feedback { font-size: 1.2em; font-weight: bold; }
         img { max-width: 100px; height: auto; display: block; margin: 10px auto; border-radius: 5px; }
@@ -19,6 +34,8 @@
     <div id="menu">
         <button onclick="iniciarCuestionario()">Iniciar Cuestionario Completo</button>
     </div>
+
+    <div id="btn-container"></div>
 
     <div id="contenedor-preguntas"></div>
     <div id="contenedor-botones-finales"></div>
@@ -51,9 +68,14 @@
             { pregunta: "¿Por qué no debe desengancharse el motor al ir cuesta abajo?", opciones: ["Menor control frenado/dirección.", "Velocidad.", "Consumo.", "Daño neumáticos.", "Daño motor."], c: [0, 3], tipo: "varias" }
         ];
 
+
         function iniciarCuestionario() {
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
+            
+            // Crear y mostrar el botón fijo al iniciar
+            document.getElementById('btn-container').innerHTML = `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
+            
             let html = "";
             bancoDePreguntas.forEach((p, index) => {
                 let aviso = p.tipo === "una" ? "Marque una opción" : "Marque las opciones correctas";
@@ -64,7 +86,6 @@
                 });
                 html += `<br><span class="feedback" id="feedback-${index}"></span></div>`;
             });
-            html += `<button id="btn-calificar" onclick="verificar()">Calificar</button>`;
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
 
@@ -75,7 +96,11 @@
                 const correcta = p.c.every(c => marcadas.includes(c)) && marcadas.length === p.c.length;
                 feedback.innerHTML = correcta ? " ✅ Correcto" : " ❌ Incorrecto";
             });
+            
+            // Ocultar el botón fijo después de calificar
             document.getElementById('btn-calificar').style.display = 'none';
+            
+            // Botón de reiniciar al final de todo
             document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="iniciarCuestionario()">Volver a intentar</button>`;
         }
     </script>
