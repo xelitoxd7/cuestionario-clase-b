@@ -79,13 +79,6 @@ const bancoDePreguntas = [
     { pregunta: "¿Si siente cansancio?", opciones: ["Más velocidad.", "Golpear.", "Aire fresco.", "Concentración."], c: [2], tipo: "una" },
     { pregunta: "¿Consejo para quien bebió?", opciones: ["Taxi.", "Café.", "Lento.", "Espera."], c: [0], tipo: "una" },
     { pregunta: "Conductor molesto, ¿qué hacer?", opciones: ["Decir.", "Luces.", "No reaccionar.", "Bocina."], c: [2], tipo: "una" },
-    { pregunta: "Sin anteojos necesarios, ¿qué hacer?", opciones: ["Lento.", "Otra forma.", "Pedir.", "No manejar."], c: [3], tipo: "una" },
-    { pregunta: "Enfermo, ¿qué hacer?", opciones: ["Medicina.", "Viaje corto.", "No manejar.", "Acostar."], c: [2], tipo: "una" },
-    { pregunta: "Sobre cansancio, ¿qué es falso?", opciones: ["Causa accidentes.", "Empeora reacción.", "Hablar ayuda.", "Desorientarse."], c: [2], tipo: "una" },
-    { pregunta: "Cansancio en viaje, ¿qué hacer?", opciones: ["Comida.", "Respirar.", "Dormir.", "Café/Siesta."], c: [3], tipo: "una" },
-    { pregunta: "Evento social, ¿qué hacer?", opciones: ["Café.", "Circulación.", "Sin alcohol.", "Evitar."], c: [3], tipo: "una" },
-    { pregunta: "Efectos alcohol, ¿qué no es consecuencia?", opciones: ["Falsa confianza.", "Mayor conciencia.", "Menor control.", "Escaso juicio."], c: [1], tipo: "una" },
-    { pregunta: "¿Qué no se ve afectado por alcohol?", opciones: ["Percepción colores.", "Juicio velocidad.", "Reacción.", "Coordinación."], c: [0], tipo: "una" },
-    { pregunta: "¿Qué factor influye en tiempo de reacción?", opciones: ["Estado salud.", "Calzada.", "Vehículo.", "Clima."], c: [0], tipo: "una" },
-    { pregunta: "¿Cuándo pierde concentración?", opciones: ["Limpiaparabrisas.", "Retrovisor.", "Volumen alto.", "Celular.", "Mapa."], c: [2, 3, 4], tipo: "varias" }
+    { pregunta: "Sin anteojos necesarios, ¿qué hacer?", opciones: ["Lento.", "Otra forma.", "Pedir.", "No manejar."], c: [3], tipo: "una" }
+
 ];
