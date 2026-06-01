@@ -1,0 +1,26 @@
+/* Esto hace que todo el cuestionario se ajuste al ancho del celular */
+.contenedor-cuestionario {
+    width: 95%;           /* Casi todo el ancho de la pantalla */
+    max-width: 500px;     /* Pero no más de 500px en tablets/PC */
+    margin: 0 auto;       /* Centrado */
+    padding: 15px;
+    font-size: 16px;      /* Tamaño legible para móvil */
+}
+
+/* Las imágenes se adaptan al ancho del móvil */
+img {
+    width: 100%;          /* Ocupa el 100% del contenedor */
+    height: auto;         /* Mantiene proporción */
+    display: block;
+}
+
+/* Los botones de opciones se ven mejor como una lista vertical */
+.opcion {
+    display: block;
+    width: 100%;
+    padding: 15px;        /* Botones grandes para dedos */
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: left;
+}
