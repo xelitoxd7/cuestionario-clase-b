@@ -2,28 +2,38 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>Cuestionario Clase B</title>
 
     <link rel="stylesheet" href="estilos.css">
 
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; padding-top: 60px; }
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
-        #selector-container { display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-        #menu { margin-top: 50px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
+        
+        /* Estilos del botón de configuración */
+        #btn-config { position: fixed; top: 15px; right: 15px; z-index: 1001; background: #333; color: white; border: none; padding: 10px 15px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s; }
+        #btn-config:hover { background: #555; }
+
+        /* Estilos del panel desplegable de configuración */
+        #selector-container { display: none; position: fixed; top: 65px; right: 15px; z-index: 1000; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; }
+        #selector-container select { margin-top: 10px; padding: 5px; width: 100%; font-size: 16px; }
+
+        button.btn-accion { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; font-size: 16px; }
+        #menu { text-align: center; margin-top: 50px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
         .feedback { font-size: 1.2em; font-weight: bold; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
 
+    <!-- Botón flotante de configuración -->
+    <button id="btn-config" onclick="toggleConfig()">⚙️</button>
+
+    <!-- Menú desplegable oculto por defecto -->
     <div id="selector-container">
-        <label for="cantidad">Preguntas:</label>
-        <select id="cantidad" onchange="iniciarCuestionario()">
+        <label for="cantidad"><strong>Preguntas por test:</strong></label>
+        <select id="cantidad" onchange="cambiarCantidad()">
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="all">Todas</option>
@@ -33,7 +43,7 @@
     <h1>CUESTIONARIO CLASE B</h1>
     
     <div id="menu">
-        <button onclick="iniciarCuestionario()">Iniciar Cuestionario</button>
+        <button class="btn-accion" onclick="iniciarCuestionario()">Iniciar Cuestionario</button>
     </div>
 
     <div id="contenedor-preguntas"></div>
@@ -44,14 +54,30 @@
     <script>
         let preguntasActuales = [];
 
+        // Función para mostrar/ocultar el menú de configuración
+        function toggleConfig() {
+            const panel = document.getElementById('selector-container');
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        // Función cuando se selecciona una nueva cantidad en el engranaje
+        function cambiarCantidad() {
+            toggleConfig(); // Cierra el menú al elegir
+            iniciarCuestionario(); // Reinicia el test con la nueva cantidad
+        }
+
         function iniciarCuestionario() {
-            document.getElementById('selector-container').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
             
             let cantidad = document.getElementById('cantidad').value;
             preguntasActuales = [...bancoDePreguntas];
 
+            // Si no son todas, cortamos el array a la cantidad deseada
             if (cantidad !== 'all') {
                 preguntasActuales = preguntasActuales.slice(0, parseInt(cantidad));
             }
@@ -62,12 +88,15 @@
                 html += `<div class="pregunta" id="pregunta-${index}">
                     <p><strong>${index + 1}. ${p.pregunta}</strong> <br><span class="aviso">(${aviso})</span></p>`;
                 p.opciones.forEach((op, i) => {
-                    html += `<input type="checkbox" name="p${index}" value="${i}"> ${op}<br>`;
+                    // Usar radio para "una" opción y checkbox para múltiples, o dejar checkbox genérico según tu diseño original
+                    html += `<label style="display:block; margin: 8px 0; cursor: pointer;">
+                                <input type="${p.tipo === 'una' ? 'radio' : 'checkbox'}" name="p${index}" value="${i}"> ${op}
+                             </label>`;
                 });
                 html += `<span class="feedback" id="feedback-${index}"></span></div>`;
             });
             
-            html += `<button type="button" id="btn-calificar" onclick="verificar()">Calificar</button>`;
+            html += `<button type="button" class="btn-accion" id="btn-calificar" onclick="verificar()">Calificar</button>`;
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
 
@@ -75,12 +104,24 @@
             preguntasActuales.forEach((p, index) => {
                 const marcadas = Array.from(document.querySelectorAll(`input[name="p${index}"]:checked`)).map(el => parseInt(el.value));
                 const feedback = document.getElementById(`feedback-${index}`);
-                const correcta = p.c.every(c => marcadas.includes(c)) && marcadas.length === p.c.length;
-                feedback.innerHTML = correcta ? " ✅ Correcto" : " ❌ Incorrecto";
+                
+                // Verifica si las respuestas marcadas coinciden exactamente con las correctas
+                const correcta = p.c.length === marcadas.length && p.c.every(c => marcadas.includes(c));
+                
+                if (correcta) {
+                    feedback.innerHTML = " ✅ Correcto";
+                    feedback.style.color = "green";
+                } else {
+                    feedback.innerHTML = " ❌ Incorrecto";
+                    feedback.style.color = "red";
+                }
             });
             
             document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<button onclick="iniciarCuestionario()">Reiniciar</button>`;
+            document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="iniciarCuestionario()">Reiniciar Test</button>`;
+            
+            // Hacer scroll hacia arriba para ver los resultados
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
