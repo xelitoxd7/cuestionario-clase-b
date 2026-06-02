@@ -12,11 +12,9 @@
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
         
-        /* Estilos del botón de configuración */
         #btn-config { position: fixed; top: 15px; right: 15px; z-index: 1001; background: #333; color: white; border: none; padding: 10px 15px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s; }
         #btn-config:hover { background: #555; }
 
-        /* Estilos del panel desplegable de configuración */
         #selector-container { display: none; position: fixed; top: 65px; right: 15px; z-index: 1000; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; }
         #selector-container select { margin-top: 10px; padding: 5px; width: 100%; font-size: 16px; }
 
@@ -27,10 +25,8 @@
 </head>
 <body>
 
-    <!-- Botón flotante de configuración -->
     <button id="btn-config" onclick="toggleConfig()">⚙️</button>
 
-    <!-- Menú desplegable oculto por defecto -->
     <div id="selector-container">
         <label for="cantidad"><strong>Preguntas por test:</strong></label>
         <select id="cantidad" onchange="cambiarCantidad()">
@@ -54,7 +50,6 @@
     <script>
         let preguntasActuales = [];
 
-        // Función para mostrar/ocultar el menú de configuración
         function toggleConfig() {
             const panel = document.getElementById('selector-container');
             if (panel.style.display === 'none' || panel.style.display === '') {
@@ -64,21 +59,24 @@
             }
         }
 
-        // Función cuando se selecciona una nueva cantidad en el engranaje
         function cambiarCantidad() {
-            toggleConfig(); // Cierra el menú al elegir
-            iniciarCuestionario(); // Reinicia el test con la nueva cantidad
+            toggleConfig(); 
+            iniciarCuestionario(); 
         }
 
         function iniciarCuestionario() {
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
             
+            // ¡Aquí está la magia! Esto hace que al reiniciar te lleve hasta arriba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             let cantidad = document.getElementById('cantidad').value;
             preguntasActuales = [...bancoDePreguntas];
 
-            // Si no son todas, cortamos el array a la cantidad deseada
             if (cantidad !== 'all') {
+                // Mezclar las preguntas aleatoriamente antes de cortarlas (opcional, pero recomendado para estudiar)
+                preguntasActuales.sort(() => Math.random() - 0.5);
                 preguntasActuales = preguntasActuales.slice(0, parseInt(cantidad));
             }
 
@@ -88,7 +86,6 @@
                 html += `<div class="pregunta" id="pregunta-${index}">
                     <p><strong>${index + 1}. ${p.pregunta}</strong> <br><span class="aviso">(${aviso})</span></p>`;
                 p.opciones.forEach((op, i) => {
-                    // Usar radio para "una" opción y checkbox para múltiples, o dejar checkbox genérico según tu diseño original
                     html += `<label style="display:block; margin: 8px 0; cursor: pointer;">
                                 <input type="${p.tipo === 'una' ? 'radio' : 'checkbox'}" name="p${index}" value="${i}"> ${op}
                              </label>`;
@@ -105,7 +102,6 @@
                 const marcadas = Array.from(document.querySelectorAll(`input[name="p${index}"]:checked`)).map(el => parseInt(el.value));
                 const feedback = document.getElementById(`feedback-${index}`);
                 
-                // Verifica si las respuestas marcadas coinciden exactamente con las correctas
                 const correcta = p.c.length === marcadas.length && p.c.every(c => marcadas.includes(c));
                 
                 if (correcta) {
@@ -120,7 +116,6 @@
             document.getElementById('btn-calificar').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="iniciarCuestionario()">Reiniciar Test</button>`;
             
-            // Hacer scroll hacia arriba para ver los resultados
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
