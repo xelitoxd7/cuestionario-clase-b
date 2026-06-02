@@ -18,9 +18,56 @@
         #selector-container { display: none; position: fixed; top: 65px; right: 15px; z-index: 1000; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; }
         #selector-container select { margin-top: 10px; padding: 5px; width: 100%; font-size: 16px; }
 
-        button.btn-accion { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; font-size: 16px; }
+        button.btn-accion { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; font-size: 16px; transition: 0.3s; }
+        button.btn-accion:hover { background-color: #45a049; transform: scale(1.05); }
+        
         #menu { text-align: center; margin-top: 50px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
         .feedback { font-size: 1.2em; font-weight: bold; margin-top: 10px; display: block; }
+
+        /* --- ESTILOS DE LA NUEVA PANTALLA DE SELECCIÓN Y ANIMACIÓN --- */
+        #pantalla-seleccion {
+            display: none; /* Oculta al principio */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 2000; /* Por encima de todo */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            
+            /* Preparación para la animación */
+            transform-origin: calc(100% - 35px) 35px; /* El punto de origen es la esquina del engranaje */
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #pantalla-seleccion h2 { font-size: 24px; color: #333; margin-bottom: 30px; }
+
+        .cuadricula-opciones {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .btn-cuadro {
+            width: 110px; height: 110px;
+            font-size: 28px; font-weight: bold;
+            background: #2196F3; color: white;
+            border: none; border-radius: 20px;
+            cursor: pointer; box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+
+        .btn-cuadro:hover { background: #1976D2; transform: translateY(-5px); }
+        .btn-cuadro:active { transform: scale(0.95); }
+
+        /* Clase que gatilla la minimización */
+        .minimizando {
+            transform: scale(0);
+            opacity: 0 !important;
+        }
     </style>
 </head>
 <body>
@@ -29,17 +76,28 @@
 
     <div id="selector-container">
         <label for="cantidad"><strong>Preguntas por test:</strong></label>
-        <select id="cantidad" onchange="cambiarCantidad()">
+        <select id="cantidad" onchange="cambiarCantidadDesdeTuerca()">
             <option value="10">10</option>
             <option value="20">20</option>
+            <option value="30">30</option>
             <option value="all">Todas</option>
         </select>
+    </div>
+
+    <div id="pantalla-seleccion">
+        <h2>¿Cuántas preguntas te gustaría responder?</h2>
+        <div class="cuadricula-opciones">
+            <button class="btn-cuadro" onclick="seleccionarYAnimar(10)">10</button>
+            <button class="btn-cuadro" onclick="seleccionarYAnimar(20)">20</button>
+            <button class="btn-cuadro" onclick="seleccionarYAnimar(30)">30</button>
+            <button class="btn-cuadro" onclick="seleccionarYAnimar('all')" style="font-size: 22px;">Todas</button>
+        </div>
     </div>
 
     <h1>CUESTIONARIO CLASE B</h1>
     
     <div id="menu">
-        <button class="btn-accion" onclick="iniciarCuestionario()">Iniciar Cuestionario</button>
+        <button class="btn-accion" onclick="mostrarPantallaSeleccion()">Iniciar Cuestionario</button>
     </div>
 
     <div id="contenedor-preguntas"></div>
@@ -59,23 +117,46 @@
             }
         }
 
-        function cambiarCantidad() {
+        function cambiarCantidadDesdeTuerca() {
             toggleConfig(); 
-            iniciarCuestionario(); 
+            generarCuestionario(); // Carga las preguntas sin la animación gigante
         }
 
-        function iniciarCuestionario() {
+        // 1. Mostrar la pantalla de cuadros gigantes
+        function mostrarPantallaSeleccion() {
+            const pantalla = document.getElementById('pantalla-seleccion');
+            pantalla.classList.remove('minimizando'); // Resetea la animación por si acaso
+            pantalla.style.display = 'flex'; // Muestra la pantalla
+        }
+
+        // 2. Ejecutar la animación de minimizar hacia la tuerca
+        function seleccionarYAnimar(cantidadElegida) {
+            // Actualizar el selector oculto para que la tuerca sepa qué elegimos
+            document.getElementById('cantidad').value = cantidadElegida;
+            
+            const pantalla = document.getElementById('pantalla-seleccion');
+            
+            // Le agregamos la clase que la hace pequeña hacia arriba a la derecha
+            pantalla.classList.add('minimizando');
+            
+            // Esperamos a que termine la animación (600ms) para generar las preguntas y ocultar el div
+            setTimeout(() => {
+                pantalla.style.display = 'none';
+                generarCuestionario();
+            }, 600);
+        }
+
+        // 3. Función que realmente imprime las preguntas (antiguo iniciarCuestionario)
+        function generarCuestionario() {
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
             
-            // ¡Aquí está la magia! Esto hace que al reiniciar te lleve hasta arriba
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             let cantidad = document.getElementById('cantidad').value;
             preguntasActuales = [...bancoDePreguntas];
 
             if (cantidad !== 'all') {
-                // Mezclar las preguntas aleatoriamente antes de cortarlas (opcional, pero recomendado para estudiar)
                 preguntasActuales.sort(() => Math.random() - 0.5);
                 preguntasActuales = preguntasActuales.slice(0, parseInt(cantidad));
             }
@@ -114,7 +195,9 @@
             });
             
             document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="iniciarCuestionario()">Reiniciar Test</button>`;
+            
+            // Ahora el botón reiniciar vuelve a abrir la pantalla gigante de selección
+            document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="mostrarPantallaSeleccion()">Hacer otro test</button>`;
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
