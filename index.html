@@ -203,8 +203,9 @@
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
 
-        function verificar() {
+                function verificar() {
             preguntasActuales.forEach((p, index) => {
+                const contenedorPregunta = document.getElementById(`pregunta-${index}`);
                 const marcadas = Array.from(document.querySelectorAll(`input[name="p${index}"]:checked`)).map(el => parseInt(el.value));
                 const feedback = document.getElementById(`feedback-${index}`);
                 
@@ -216,15 +217,25 @@
                 } else {
                     feedback.innerHTML = " ❌ Incorrecto";
                     feedback.style.color = "red";
+                    
+                    // --- AQUÍ ESTÁ LA MAGIA ---
+                    // Recorremos todas las opciones de esta pregunta
+                    const labels = contenedorPregunta.querySelectorAll('label');
+                    p.c.forEach(indiceCorrecto => {
+                        // Pintamos de verde el label de la respuesta correcta
+                        labels[indiceCorrecto].style.backgroundColor = "#d4edda";
+                        labels[indiceCorrecto].style.border = "1px solid #28a745";
+                        labels[indiceCorrecto].style.padding = "5px";
+                        labels[indiceCorrecto].style.borderRadius = "5px";
+                    });
                 }
             });
             
             document.getElementById('btn-calificar').style.display = 'none';
-            
             document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="mostrarPantallaSeleccion()">Hacer otro test</button>`;
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
 
         // Ejecutamos la magia de los botones ni bien cargue la página
         window.onload = function() {
