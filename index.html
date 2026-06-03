@@ -47,7 +47,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            /* Permite hacer scroll si algún día tienes 200 preguntas y salen muchos botones */
             max-height: 60vh;
             overflow-y: auto;
             padding: 10px;
@@ -101,38 +100,28 @@
     <script>
         let preguntasActuales = [];
 
-        // Esta función lee el banco de preguntas y crea los botones automáticamente
         function inicializarOpcionesCantidad() {
             const totalPreguntas = bancoDePreguntas.length;
             const selectCantidad = document.getElementById('cantidad');
             const contenedorBotones = document.getElementById('botones-cantidad');
-            
-            // Calculamos cuántos grupos de 10 hay (ej: si hay 35, da 3 grupos: 10, 20, 30)
             const cantidadDecenas = Math.floor(totalPreguntas / 10);
             
             for (let i = 1; i <= cantidadDecenas; i++) {
                 let num = i * 10;
-                
-                // Agregar al select de la tuerca
                 let option = document.createElement('option');
                 option.value = num;
                 option.text = num;
                 selectCantidad.appendChild(option);
-                
-                // Agregar botón gigante a la pantalla de selección
                 let btn = document.createElement('button');
                 btn.className = 'btn-cuadro';
                 btn.innerHTML = num;
                 btn.onclick = () => seleccionarYAnimar(num);
                 contenedorBotones.appendChild(btn);
             }
-            
-            // Siempre agregamos la opción "Todas" al final
             let optionTodas = document.createElement('option');
             optionTodas.value = 'all';
             optionTodas.text = 'Todas';
             selectCantidad.appendChild(optionTodas);
-            
             let btnTodas = document.createElement('button');
             btnTodas.className = 'btn-cuadro';
             btnTodas.style.fontSize = '22px';
@@ -143,11 +132,7 @@
 
         function toggleConfig() {
             const panel = document.getElementById('selector-container');
-            if (panel.style.display === 'none' || panel.style.display === '') {
-                panel.style.display = 'block';
-            } else {
-                panel.style.display = 'none';
-            }
+            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
         }
 
         function cambiarCantidadDesdeTuerca() {
@@ -163,10 +148,8 @@
 
         function seleccionarYAnimar(cantidadElegida) {
             document.getElementById('cantidad').value = cantidadElegida;
-            
             const pantalla = document.getElementById('pantalla-seleccion');
             pantalla.classList.add('minimizando');
-            
             setTimeout(() => {
                 pantalla.style.display = 'none';
                 generarCuestionario();
@@ -176,12 +159,14 @@
         function generarCuestionario() {
             document.getElementById('menu').style.display = 'none';
             document.getElementById('contenedor-botones-finales').innerHTML = '';
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             let cantidad = document.getElementById('cantidad').value;
-            preguntasActuales = [...bancoDePreguntas];
+            // Guardamos el estado para poder restaurar
+            sessionStorage.setItem('testActivo', 'true');
+            sessionStorage.setItem('cantidadElegida', cantidad);
 
+            preguntasActuales = [...bancoDePreguntas];
             if (cantidad !== 'all') {
                 preguntasActuales = preguntasActuales.slice(0, parseInt(cantidad));
             }
@@ -203,7 +188,7 @@
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
 
-                function verificar() {
+        function verificar() {
             preguntasActuales.forEach((p, index) => {
                 const contenedorPregunta = document.getElementById(`pregunta-${index}`);
                 const marcadas = Array.from(document.querySelectorAll(`input[name="p${index}"]:checked`)).map(el => parseInt(el.value));
@@ -217,12 +202,8 @@
                 } else {
                     feedback.innerHTML = " ❌ Incorrecto";
                     feedback.style.color = "red";
-                    
-                    // --- AQUÍ ESTÁ LA MAGIA ---
-                    // Recorremos todas las opciones de esta pregunta
                     const labels = contenedorPregunta.querySelectorAll('label');
                     p.c.forEach(indiceCorrecto => {
-                        // Pintamos de verde el label de la respuesta correcta
                         labels[indiceCorrecto].style.backgroundColor = "#d4edda";
                         labels[indiceCorrecto].style.border = "1px solid #28a745";
                         labels[indiceCorrecto].style.padding = "5px";
@@ -232,14 +213,23 @@
             });
             
             document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="mostrarPantallaSeleccion()">Hacer otro test</button>`;
+            document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="reiniciarCuestionario()">Hacer otro test</button>`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            sessionStorage.removeItem('testActivo'); // Al terminar el test, ya no hay uno activo
         }
 
+        function reiniciarCuestionario() {
+            sessionStorage.removeItem('testActivo');
+            location.reload();
+        }
 
-        // Ejecutamos la magia de los botones ni bien cargue la página
         window.onload = function() {
             inicializarOpcionesCantidad();
+            // Restaurar si el usuario recarga la página
+            if (sessionStorage.getItem('testActivo') === 'true') {
+                document.getElementById('cantidad').value = sessionStorage.getItem('cantidadElegida');
+                generarCuestionario();
+            }
         };
 
     </script>
