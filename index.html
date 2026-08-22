@@ -8,20 +8,109 @@
     <link rel="stylesheet" href="estilos.css">
 
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; padding-top: 60px; }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; padding-top: 75px; padding-bottom: 80px; }
         .pregunta { margin-bottom: 25px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; }
         .aviso { font-weight: bold; color: #d35400; font-size: 0.9em; }
+        .doble-puntaje-badge { display: inline-block; background: #e67e22; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; margin-left: 5px; }
         
-        #btn-config { position: fixed; top: 15px; right: 15px; z-index: 1001; background: #333; color: white; border: none; padding: 10px 15px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s; }
+        #btn-config { display: none; position: fixed; top: 15px; right: 15px; z-index: 1001; background: #333; color: white; border: none; padding: 10px 15px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s; }
         #btn-config:hover { background: #555; }
 
-        #selector-container { display: none; position: fixed; top: 65px; right: 15px; z-index: 1000; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; }
-        #selector-container select { margin-top: 10px; padding: 5px; width: 100%; font-size: 16px; }
+        /* Panel Creativo de Estado (HUD) */
+        #hud-estado {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 8px 18px;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            align-items: center;
+            gap: 15px;
+            max-width: 98%;
+            white-space: nowrap;
+        }
+        .hud-item { display: flex; align-items: center; gap: 5px; }
+        .hud-barra-container { width: 50px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; display: inline-block; cursor: pointer; }
+        .hud-barra-fill { height: 100%; width: 0%; background: #4CAF50; transition: width 0.4s ease; }
+        #hud-tiempo { color: #c0392b; font-family: monospace; font-size: 14px; }
 
-        button.btn-accion { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; font-size: 16px; transition: 0.3s; }
+        /* Barra Inferior Fija para el botón de Calificar */
+        #barra-inferior {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Botón de Truco Secreto (Oculto por defecto) */
+        #btn-secreto-auto {
+            display: none;
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #btn-secreto-auto:hover { background-color: #732d91; }
+
+        /* Modales de Confirmación Personalizados */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-contenido {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-botones {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #selector-container { display: none; position: fixed; top: 65px; right: 15px; z-index: 1000; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; width: 180px; }
+        #selector-container select { margin-top: 5px; margin-bottom: 10px; padding: 5px; width: 100%; font-size: 16px; }
+
+        button.btn-accion { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-size: 16px; transition: 0.3s; }
         button.btn-accion:hover { background-color: #45a049; transform: scale(1.05); }
+
+        button.btn-secundario { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-size: 16px; transition: 0.3s; }
+        button.btn-secundario:hover { background-color: #c0392b; }
+
+        button.btn-menu-tuerca { background-color: #e74c3c; color: white; border: none; padding: 8px 10px; cursor: pointer; border-radius: 5px; width: 100%; font-size: 14px; transition: 0.3s; }
+        button.btn-menu-tuerca:hover { background-color: #c0392b; }
         
-        #menu { text-align: center; margin-top: 50px; padding: 20px; background: #f4f4f4; border-radius: 8px; }
+        #menu { text-align: center; margin-top: 40px; padding: 20px; background: #f4f4f4; border-radius: 8px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .feedback { font-size: 1.2em; font-weight: bold; margin-top: 10px; display: block; }
 
         #pantalla-seleccion {
@@ -68,40 +157,202 @@
             transform: scale(0);
             opacity: 0 !important;
         }
+
+        #modal-imagen {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #modal-imagen img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        .pregunta img {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .pregunta img:hover {
+            opacity: 0.9;
+        }
+
+        .aviso-zoom {
+            display: block;
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 4px;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        /* Estilos para la pantalla de Celebración */
+        .pantalla-celebracion {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 750px;
+            margin: 10px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .video-cine-container {
+            width: 100%;
+            max-width: 100%;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: #000;
+        }
+        .video-cine-container video {
+            width: 100%;
+            max-height: 65vh;
+            display: block;
+            border-radius: 8px;
+        }
+        .aviso-audio {
+            background: #f39c12;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
-    <button id="btn-config" onclick="toggleConfig()">⚙️</button>
+    <button id="btn-config" onclick="manejarToqueTuerca()">⚙️</button>
+
+    <!-- Panel Creativo de Estado (HUD) -->
+    <div id="hud-estado">
+        <div class="hud-item" title="Puntuación Obtenida">⭐ <span id="hud-aciertos">0</span></div>
+        <div class="hud-item" title="Tiempo Restante">⏱️ <span id="hud-tiempo">45:00</span></div>
+        <div class="hud-item" title="Faltantes">⏳ <span id="hud-faltantes">0</span></div>
+        <div class="hud-item">
+            <div class="hud-barra-container" onclick="manejarToqueBarra()"><div class="hud-barra-fill" id="hud-barra"></div></div>
+        </div>
+    </div>
+
+    <!-- Barra Inferior Fija -->
+    <div id="barra-inferior">
+        <button type="button" class="btn-accion" id="btn-calificar" onclick="intentarVerificar()">Calificar Test</button>
+        <button type="button" id="btn-secreto-auto" onclick="autoAprobarTest()">⚡ Auto-Aprobar</button>
+    </div>
+
+    <!-- Modal de Confirmación por preguntas faltantes -->
+    <div id="modal-confirmacion" class="modal-overlay">
+        <div class="modal-contenido">
+            <h3>⚠️ Preguntas pendientes</h3>
+            <p id="texto-modal-advertencia">Aún tienes preguntas sin responder. ¿Estás seguro de que deseas calificar?</p>
+            <div class="modal-botones">
+                <button class="btn-secundario" onclick="cerrarModalConfirmacion()">No</button>
+                <button class="btn-accion" onclick="ejecutarVerificacionDefinitiva()">Sí, calificar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación para volver al menú en Test Real -->
+    <div id="modal-menu-real" class="modal-overlay">
+        <div class="modal-contenido">
+            <h3>⚠️ ¿Volver al Menú?</h3>
+            <p>Si sales ahora, perderás el progreso actual del Test Real.</p>
+            <div class="modal-botones">
+                <button class="btn-secundario" onclick="cerrarModalMenuReal()">Continuar test</button>
+                <button class="btn-accion" onclick="confirmarVolverAlMenu()">Sí, salir</button>
+            </div>
+        </div>
+    </div>
 
     <div id="selector-container">
-        <label for="cantidad"><strong>Preguntas por test:</strong></label>
-        <select id="cantidad" onchange="cambiarCantidadDesdeTuerca()">
-            </select>
+        <div id="bloque-selector-cantidad">
+            <label for="cantidad"><strong>Preguntas por test:</strong></label>
+            <select id="cantidad" onchange="cambiarCantidadDesdeTuerca()"></select>
+            <hr style="border:0; border-top:1px solid #eee; margin: 10px 0;">
+        </div>
+        <button type="button" class="btn-menu-tuerca" onclick="solicitarVolverAlMenu()">Volver al Menú</button>
     </div>
 
     <div id="pantalla-seleccion">
         <h2>¿Cuántas preguntas te gustaría responder?</h2>
-        <div class="cuadricula-opciones" id="botones-cantidad">
-            </div>
+        <div class="cuadricula-opciones" id="botones-cantidad"></div>
+    </div>
+
+    <!-- Contenedor flotante para el Zoom de las imágenes de las preguntas -->
+    <div id="modal-imagen" onclick="cerrarImagenModal()">
+        <img id="imagen-ampliada" src="" alt="Vista previa">
     </div>
 
     <h1>CUESTIONARIO CLASE B</h1>
     
     <div id="menu">
-        <button class="btn-accion" onclick="mostrarPantallaSeleccion()">Iniciar Cuestionario</button>
+        <button class="btn-accion" id="btn-texto-menu" onclick="mostrarPantallaSeleccion()">Test Completo</button>
+        <button class="btn-accion" style="background-color: #3498db;" onclick="mostrarInstruccionesTestRapido()">⚡ Test Rápido (10 preg.)</button>
+        <button class="btn-accion" style="background-color: #e67e22;" onclick="mostrarInstruccionesTestReal()">Test Real (35 preg.) - 45 min</button>
     </div>
 
     <div id="contenedor-preguntas"></div>
-    <div id="contenedor-botones-finales"></div>
+    <div id="contenedor-botones-finales" style="text-align: center; margin-top: 20px;"></div>
 
     <script src="preguntas.js"></script>
 
     <script>
         let preguntasActuales = [];
+        let tiempoRestante = 2700;
+        let intervaloReloj = null;
+
+        let clicksTuerca = 0;
+        let clicksBarra = 0;
+        let faseTruco = 1;
+
+        function manejarToqueTuerca() {
+            if (faseTruco === 1) {
+                clicksTuerca++;
+                if (clicksTuerca >= 10) {
+                    faseTruco = 2;
+                    clicksBarra = 0;
+                }
+            }
+            toggleConfig();
+        }
+
+        function manejarToqueBarra() {
+            if (faseTruco === 2) {
+                clicksBarra++;
+                if (clicksBarra >= 3) {
+                    document.getElementById('btn-secreto-auto').style.display = 'block';
+                    faseTruco = 1;
+                    clicksTuerca = 0;
+                }
+            }
+        }
+
+        function autoAprobarTest() {
+            preguntasActuales.forEach((p, index) => {
+                p.c.forEach(indiceCorrecto => {
+                    const input = document.querySelector(`input[name="p${index}"][value="${indiceCorrecto}"]`);
+                    if (input) input.checked = true;
+                });
+            });
+            actualizarHUD();
+            ejecutarVerificacionDefinitiva();
+        }
 
         function inicializarOpcionesCantidad() {
             const totalPreguntas = bancoDePreguntas.length;
+            document.getElementById('btn-texto-menu').innerText = `Test Completo (${totalPreguntas} preguntas)`;
+
             const selectCantidad = document.getElementById('cantidad');
             const contenedorBotones = document.getElementById('botones-cantidad');
             const cantidadDecenas = Math.floor(totalPreguntas / 10);
@@ -132,12 +383,21 @@
 
         function toggleConfig() {
             const panel = document.getElementById('selector-container');
+            const bloqueSelector = document.getElementById('bloque-selector-cantidad');
+            let modo = sessionStorage.getItem('modoTest') || 'custom';
+
+            if (modo === 'real') {
+                bloqueSelector.style.display = 'none';
+            } else {
+                bloqueSelector.style.display = 'block';
+            }
+
             panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
         }
 
         function cambiarCantidadDesdeTuerca() {
             toggleConfig(); 
-            generarCuestionario(); 
+            generarCuestionario('custom'); 
         }
 
         function mostrarPantallaSeleccion() {
@@ -152,86 +412,48 @@
             pantalla.classList.add('minimizando');
             setTimeout(() => {
                 pantalla.style.display = 'none';
-                generarCuestionario();
+                generarCuestionario('custom');
             }, 600);
         }
 
-        function generarCuestionario() {
+        function mostrarInstruccionesTestRapido() {
             document.getElementById('menu').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = '';
+            document.getElementById('btn-config').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            let cantidad = document.getElementById('cantidad').value;
-            // Guardamos el estado para poder restaurar
-            sessionStorage.setItem('testActivo', 'true');
-            sessionStorage.setItem('cantidadElegida', cantidad);
 
-            preguntasActuales = [...bancoDePreguntas];
-            if (cantidad !== 'all') {
-                preguntasActuales = preguntasActuales.slice(0, parseInt(cantidad));
-            }
-
-            let html = "";
-            preguntasActuales.forEach((p, index) => {
-                let aviso = p.tipo === "una" ? "Marque una opción" : "Marque las opciones correctas";
-                html += `<div class="pregunta" id="pregunta-${index}">
-                    <p><strong>${index + 1}. ${p.pregunta}</strong> <br><span class="aviso">(${aviso})</span></p>`;
-                p.opciones.forEach((op, i) => {
-                    html += `<label style="display:block; margin: 8px 0; cursor: pointer;">
-                                <input type="${p.tipo === 'una' ? 'radio' : 'checkbox'}" name="p${index}" value="${i}"> ${op}
-                             </label>`;
-                });
-                html += `<span class="feedback" id="feedback-${index}"></span></div>`;
-            });
-            
-            html += `<button type="button" class="btn-accion" id="btn-calificar" onclick="verificar()">Calificar</button>`;
+            let html = `
+                <div class="pregunta" style="background: #fff; max-width: 650px; margin: 20px auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #2980b9; text-align: center; margin-top: 0;">⚡ Test Rápido Exprés</h2>
+                    <hr style="border:0; border-top:1px solid #eee; margin: 15px 0;">
+                    <p style="color: #444; text-align: left; line-height: 1.6;">
+                        Este es un <strong>Test Rápido Aleatorio de 10 preguntas</strong> diseñado especialmente para repasar al vuelo cuando tienes pocos minutos. Las preguntas se seleccionan al azar del banco oficial para poner a prueba tus conocimientos de forma ágil y directa.
+                    </p>
+                    <div style="text-align: center; margin-top: 25px; display: flex; gap: 15px; justify-content: center;">
+                        <button class="btn-secundario" onclick="volverAlMenuDesdeTuerca()">Volver</button>
+                        <button class="btn-accion" style="background-color: #3498db;" onclick="iniciarTestRapido()">¡Comenzar Test Rápido!</button>
+                    </div>
+                </div>
+            `;
             document.getElementById('contenedor-preguntas').innerHTML = html;
         }
 
-        function verificar() {
-            preguntasActuales.forEach((p, index) => {
-                const contenedorPregunta = document.getElementById(`pregunta-${index}`);
-                const marcadas = Array.from(document.querySelectorAll(`input[name="p${index}"]:checked`)).map(el => parseInt(el.value));
-                const feedback = document.getElementById(`feedback-${index}`);
-                
-                const correcta = p.c.length === marcadas.length && p.c.every(c => marcadas.includes(c));
-                
-                if (correcta) {
-                    feedback.innerHTML = " ✅ Correcto";
-                    feedback.style.color = "green";
-                } else {
-                    feedback.innerHTML = " ❌ Incorrecto";
-                    feedback.style.color = "red";
-                    const labels = contenedorPregunta.querySelectorAll('label');
-                    p.c.forEach(indiceCorrecto => {
-                        labels[indiceCorrecto].style.backgroundColor = "#d4edda";
-                        labels[indiceCorrecto].style.border = "1px solid #28a745";
-                        labels[indiceCorrecto].style.padding = "5px";
-                        labels[indiceCorrecto].style.borderRadius = "5px";
-                    });
-                }
-            });
-            
-            document.getElementById('btn-calificar').style.display = 'none';
-            document.getElementById('contenedor-botones-finales').innerHTML = `<button class="btn-accion" onclick="reiniciarCuestionario()">Hacer otro test</button>`;
+        function iniciarTestRapido() {
+            sessionStorage.setItem('tipoTest', 'rapido');
+            generarCuestionario('rapido');
+        }
+
+        function mostrarInstruccionesTestReal() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('btn-config').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            sessionStorage.removeItem('testActivo'); // Al terminar el test, ya no hay uno activo
-        }
 
-        function reiniciarCuestionario() {
-            sessionStorage.removeItem('testActivo');
-            location.reload();
-        }
-
-        window.onload = function() {
-            inicializarOpcionesCantidad();
-            // Restaurar si el usuario recarga la página
-            if (sessionStorage.getItem('testActivo') === 'true') {
-                document.getElementById('cantidad').value = sessionStorage.getItem('cantidadElegida');
-                generarCuestionario();
-            }
-        };
-
-    </script>
-</body>
-</html>
+            let html = `
+                <div class="pregunta" style="background: #fff; max-width: 650px; margin: 20px auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #2c3e50; text-align: center; margin-top: 0;">📋 Instrucciones Oficiales - Examen Teórico Clase B</h2>
+                    <hr style="border:0; border-top:1px solid #eee; margin: 15px 0;">
+                    <ul style="line-height: 1.8; color: #444; text-align: left; padding-left: 20px;">
+                        <li><strong>Duración máxima:</strong> 45 minutos. El cronómetro comenzará a correr al iniciar y el test se calificará automáticamente al agotarse el tiempo.</li>
+                        <li><strong>Cantidad de preguntas:</strong> El test consta de <strong>35 preguntas</strong> seleccionadas al azar del banco oficial.</li>
+                        <li><strong>Preguntas de doble puntaje:</strong> 3 preguntas de la evaluación tienen asignado un valor de <strong>2 puntos</strong>. Las demás equivalen a <strong>1 punto</strong> cada una (Máximo de <strong>38 puntos</strong>).</li>
+                        <li><strong>Aprobación:</strong> Se requiere un rendimiento mínimo del 80% (al menos <strong>33 puntos</strong>) para aprobar.</li>
+                        <li><strong>Navegación:</strong> Puedes responder en el orden que prefieras y modificar tus 
